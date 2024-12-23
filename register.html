@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <link rel="icon" type="x-icon" href="/static/icon.ico">
+    <meta name="viewport" content="initial-scale=1, width=device-width">
+    
+    <!-- Link to the external CSS file -->
+    <link rel="stylesheet" href="/static/style1.css">
+    <title>Register</title>
+</head>
+
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <ul class="nav-links">
+                <li><a class="nav-link" href="/login">Log In</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="form-container">
+        <form action="/register" method="post" class="login-form">
+            <h2 class="form-title">Register</h2>
+            <div class="form-group">
+                <input class="form-control" autocomplete="off" autofocus name="username" placeholder="Username" type="text">
+            </div>
+            <div class="form-group">
+                <input class="form-control" name="password" placeholder="Password" type="password">
+            </div>
+            <div class="form-group">
+                <input class="form-control" name="confirmation" placeholder="confirm" type="password">
+            </div>
+            <button class="btn" type="submit">Register</button>
+        </form>
+    </main>
+</body>
+
+</html>
