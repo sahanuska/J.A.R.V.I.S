@@ -1,41 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-    <meta charset="utf-8">
-    <link rel="icon" type="x-icon" href="/static/icon.ico">
-    <meta name="viewport" content="initial-scale=1, width=device-width">
-    
-    <!-- Link to the external CSS file -->
-    <link rel="stylesheet" href="/static/style1.css">
-
-
-    <title>Login</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>JARVIS - Login</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/static/style1.css">
 </head>
-
 <body>
-    <!-- Navbar -->
-    <nav class="navbar">
-        <div class="nav-container">
-            <ul class="nav-links">
-                <li><a class="nav-link" href="/register">Register</a></li>
-            </ul>
-        </div>
-    </nav>
-
-    <!-- Main Content -->
-    <main class="form-container">
-        <form action="/login" method="post" class="login-form">
-            <h2 class="form-title">Welcome Back!</h2>
-            <div class="form-group">
-                <input class="form-control" autocomplete="off" autofocus name="username" placeholder="Username" type="text">
-            </div>
-            <div class="form-group">
-                <input class="form-control" name="password" placeholder="Password" type="password">
-            </div>
-            <button class="btn" type="submit">Log In</button>
-        </form>
-    </main>
+  <div class="auth-container">
+    <div class="auth-header">
+      <h1>JARVIS ACCESS</h1>
+      <p>Stark Industries Secure Portal</p>
+    </div>
+    
+    <form class="auth-form" action="/login" method="POST">
+      <div class="form-group">
+        <label for="username">IDENTIFICATION</label>
+        <input type="text" id="username" name="username" required>
+      </div>
+      
+      <div class="form-group">
+        <label for="password">AUTHENTICATION CODE</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      
+      <button type="submit">ACCESS SYSTEM</button>
+    </form>
+    
+    <div class="auth-footer">
+      <p>New user? <a href="/register">Request clearance</a></p>
+    </div>
+  </div>
 </body>
-
 </html>
