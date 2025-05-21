@@ -1,70 +1,127 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const sendButton = document.getElementById("send-btn");
-  const userInput = document.getElementById("user-input");
-  const chatContainer = document.getElementById("chat-container");
-
-  // Function to send message to the backend
-  function sendMessageToServer(message) {
-      const sessionId = localStorage.getItem("session_id") || generateSessionId();
-      localStorage.setItem("session_id", sessionId);
-
-      fetch("/chat", {
-          method: "POST",
-          headers: {
-              "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-              message: message,
-              session_id: sessionId
-          })
-      })
-      .then(response => response.json())
-      .then(data => {
-          const botMessage = data.response;
-          appendMessage(botMessage, "bot");  // Append bot response
-      })
-      .catch(error => {
-          console.error("Error sending message to server:", error);
+document.addEventListener('DOMContentLoaded', function() {
+  const registerForm = document.querySelector('.auth-form');
+  const passwordInput = document.getElementById('access_code');
+  const confirmPasswordInput = document.getElementById('confirm_code');
+  
+  if (registerForm) {
+      registerForm.addEventListener('submit', async function(e) {
+          e.preventDefault();
+          
+          // Get form values
+          const agentId = document.getElementById('agent_id').value.trim();
+          const email = document.getElementById('security_email').value.trim();
+          const password = passwordInput.value;
+          const confirmPassword = confirmPasswordInput.value;
+          
+          // Clear previous errors
+          clearErrorMessages();
+          
+          // Validate fields
+          let isValid = true;
+          
+          if (!agentId) {
+              showError('agent_id', 'Agent ID is required');
+              isValid = false;
+          } else if (agentId.length < 4) {
+              showError('agent_id', 'Agent ID must be at least 4 characters');
+              isValid = false;
+          }
+          
+          if (!email) {
+              showError('security_email', 'Security email is required');
+              isValid = false;
+          } else if (!validateEmail(email)) {
+              showError('security_email', 'Please enter a valid security email');
+              isValid = false;
+          }
+          
+          if (!password) {
+              showError('access_code', 'Access code is required');
+              isValid = false;
+          } else if (password.length < 8) {
+              showError('access_code', 'Access code must be at least 8 characters');
+              isValid = false;
+          }
+          
+          if (!confirmPassword) {
+              showError('confirm_code', 'Please confirm your access code');
+              isValid = false;
+          } else if (password !== confirmPassword) {
+              showError('confirm_code', 'Access codes do not match');
+              isValid = false;
+          }
+          
+          if (!isValid) return;
+          
+          // Submit form
+          try {
+              const submitBtn = registerForm.querySelector('button[type="submit"]');
+              submitBtn.disabled = true;
+              submitBtn.textContent = 'SECURING ACCESS...';
+              
+              // Simulate API call (replace with actual fetch in production)
+              await new Promise(resolve => setTimeout(resolve, 1500));
+              
+              // Show success and redirect
+              showSuccessMessage('CLEARANCE GRANTED! Redirecting to access portal...');
+              setTimeout(() => {
+                  window.location.href = '/login';
+              }, 2000);
+              
+          } catch (error) {
+              console.error('Registration error:', error);
+              showFormError('System error. Please try again.');
+              const submitBtn = registerForm.querySelector('button[type="submit"]');
+              submitBtn.disabled = false;
+              submitBtn.textContent = 'REQUEST CLEARANCE';
+          }
       });
   }
-
-  // Function to append a message to the chat window
-  function appendMessage(message, sender) {
-      const messageDiv = document.createElement("div");
-      messageDiv.classList.add("message");
-      messageDiv.classList.add(sender === "user" ? "user-message" : "bot-message");
-      messageDiv.textContent = message;
-      chatContainer.appendChild(messageDiv);
-
-      // Scroll to the latest message
-      chatContainer.scrollTop = chatContainer.scrollHeight;
+  
+  // Helper functions
+  function clearErrorMessages() {
+      document.querySelectorAll('.error-message').forEach(el => el.remove());
   }
-
-  // Function to generate a unique session ID
-  function generateSessionId() {
-      return "session_" + Math.random().toString(36).substr(2, 9);
+  
+  function showError(fieldId, message) {
+      const field = document.getElementById(fieldId);
+      const errorElement = document.createElement('div');
+      errorElement.className = 'error-message';
+      errorElement.textContent = message;
+      errorElement.style.color = '#ff4444';
+      errorElement.style.marginTop = '5px';
+      errorElement.style.fontSize = '0.8rem';
+      
+      field.parentNode.appendChild(errorElement);
   }
-
-  // Send message when 'Enter' key is pressed in the input field
-  userInput.addEventListener("keydown", function (e) {
-      if (e.key === "Enter") {
-          e.preventDefault();  // Prevent form submission or any other default behavior
-          const message = userInput.value.trim();
-          if (message) {
-              appendMessage(message, "user");
-              sendMessageToServer(message);
-              userInput.value = "";  // Clear the input field
-          }
-      }
-  });
-
-  // Send message when the 'Send' button is clicked
-  sendButton.addEventListener("click", function () {
-      const message = userInput.value.trim();
-      if (message) {
-          appendMessage(message, "user");
-          sendMessageToServer(message);
-          userInput.value = "";  // Clear the input field
-      }
-  });
+  
+  function showFormError(message) {
+      const errorElement = document.createElement('div');
+      errorElement.className = 'form-error-message';
+      errorElement.textContent = message;
+      errorElement.style.color = '#ff4444';
+      errorElement.style.textAlign = 'center';
+      errorElement.style.margin = '15px 0';
+      
+      // Insert before the submit button
+      registerForm.insertBefore(errorElement, registerForm.querySelector('button[type="submit"]'));
+  }
+  
+  function showSuccessMessage(message) {
+      const successElement = document.createElement('div');
+      successElement.className = 'success-message';
+      successElement.textContent = message;
+      successElement.style.color = '#00C851';
+      successElement.style.textAlign = 'center';
+      successElement.style.margin = '15px 0';
+      successElement.style.fontWeight = 'bold';
+      
+      // Insert before the submit button
+      registerForm.insertBefore(successElement, registerForm.querySelector('button[type="submit"]'));
+  }
+  
+  function validateEmail(email) {
+      const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      return re.test(email);
+  }
 });
